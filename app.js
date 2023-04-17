@@ -81,4 +81,13 @@ app.use((req, res, next) => {
 app.use(errorLogger);
 app.use(errors());
 
+app.use((err, req, res, next) => {
+  const { code = 500, message } = err;
+
+  res.status(code).send({
+    message: code === 500 ? 'На сервере произошла ошибка' : message,
+  });
+  next();
+});
+
 app.listen(3000);

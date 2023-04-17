@@ -4,8 +4,6 @@ require('dotenv').config();
 const { errors, celebrate, Joi } = require('celebrate');
 const { login, createUser } = require('./controllers/users');
 const NotFoundError = require('./errors/not-found-err');
-const constants = require('./utils/constants');
-
 
 const app = express();
 const auth = require('./middlewares/auth');

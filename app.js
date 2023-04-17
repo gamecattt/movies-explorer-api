@@ -12,6 +12,8 @@ const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const allowedCors = [
+  'http://gamecat-movies-api.nomoredomains.monster',
+  'https://gamecat-movies-api.nomoredomains.monster',
   'localhost:3000',
 ];
 
@@ -38,7 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
   useNewUrlParser: true,
   // useCreateIndex: true,
   // useFindAndModify: false

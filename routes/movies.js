@@ -8,9 +8,9 @@ const {
 const constants = require('../utils/constants');
 const mongoose = require("mongoose");
 
-router.get('/movies', getMovies);
+router.get('/', getMovies);
 
-router.post('/movies', celebrate({
+router.post('/', celebrate({
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),

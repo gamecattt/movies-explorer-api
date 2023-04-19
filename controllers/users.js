@@ -51,6 +51,8 @@ module.exports.updateProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequest('Ошибка валидации'));
+      } else if (err.code === 11000) {
+        next(new ConflictError('Пользователь уже зарегистрирован'));
       } else {
         next(err);
       }
@@ -76,4 +78,8 @@ module.exports.login = (req, res, next) => {
       });
     })
     .catch(next);
+};
+
+module.exports.logout = (req, res, next) => {
+  next();
 };

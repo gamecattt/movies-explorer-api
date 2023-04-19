@@ -2,12 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const NotFoundError = require('./errors/not-found-err');
 
 const app = express();
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const rateLimit = require('./middlewares/rateLimit');
+const errorHandler = require('./middlewares/errorHandler');
 
 const { DATABASE_URL } = process.env;
+
+app.use(helmet());
 
 const allowedCors = [
   'http://gamecat-movies-api.nomoredomains.monster',
@@ -34,14 +39,14 @@ app.use((req, res, next) => {
   return next();
 });
 
+app.use('/api', rateLimit);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false
 });
 
 app.use('/api', require('./routes/index'));
@@ -52,14 +57,6 @@ app.use((req, res, next) => {
 
 app.use(errorLogger);
 app.use(errors());
-
-app.use((err, req, res, next) => {
-  const { code = 500, message } = err;
-
-  res.status(code).send({
-    message: code === 500 ? 'На сервере произошла ошибка' : message,
-  });
-  next();
-});
+app.use(errorHandler);
 
 app.listen(3000);

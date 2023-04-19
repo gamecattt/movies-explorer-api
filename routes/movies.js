@@ -6,7 +6,6 @@ const {
   deleteMovie,
 } = require('../controllers/movies');
 const constants = require('../utils/constants');
-const mongoose = require("mongoose");
 
 router.get('/', getMovies);
 
@@ -20,7 +19,7 @@ router.post('/', celebrate({
     image: Joi.string().required().regex(constants.URL_REGEX),
     trailerLink: Joi.string().required().regex(constants.URL_REGEX),
     thumbnail: Joi.string().required().regex(constants.URL_REGEX),
-    movieId: Joi.string().required().hex().length(24),
+    movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),

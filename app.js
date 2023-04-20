@@ -3,14 +3,13 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const { errors } = require('celebrate');
 const helmet = require('helmet');
-const NotFoundError = require('./errors/not-found-err');
 
 const app = express();
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const rateLimit = require('./middlewares/rateLimit');
 const errorHandler = require('./middlewares/errorHandler');
 
-const { DATABASE_URL } = process.env;
+const { NODE_ENV, DATABASE_URL } = process.env;
 
 app.use(helmet());
 
@@ -39,21 +38,17 @@ app.use((req, res, next) => {
   return next();
 });
 
-app.use('/api', rateLimit);
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
-mongoose.connect(DATABASE_URL, {
+app.use('/api', rateLimit);
+
+mongoose.connect(NODE_ENV === 'production' ? DATABASE_URL : 'mongodb://127.0.0.1:27017/bitfilmsdb', {
   useNewUrlParser: true,
 });
 
 app.use('/api', require('./routes/index'));
-
-app.use((req, res, next) => {
-  next(new NotFoundError('Route not found'));
-});
 
 app.use(errorLogger);
 app.use(errors());

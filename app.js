@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 const { errors } = require('celebrate');
 const helmet = require('helmet');
+const cors = require('cors');
 
 const app = express();
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -12,6 +13,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const { NODE_ENV, DATABASE_URL } = process.env;
 
 app.use(helmet());
+app.use(cors());
 
 const allowedCors = [
   'http://gamecat-movies-api.nomoredomains.monster',
